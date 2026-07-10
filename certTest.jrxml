@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports
+                                  http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="Certificate" pageWidth="842" pageHeight="595"
+              columnWidth="842" leftMargin="0" rightMargin="0"
+              topMargin="0" bottomMargin="0"
+              whenNoDataType="AllSectionsNoDetail">
+
+    <parameter name="NAME_CLAUSE" class="java.lang.String">
+	<defaultValueExpression><![CDATA["Ronald Kanengieter"]]></defaultValueExpression>
+    </parameter>
+
+    <parameter name="REASON_CLAUSE" class="java.lang.String">
+	<defaultValueExpression><![CDATA["for not picking your nose for 5 whole days!!"]]></defaultValueExpression>
+    </parameter>
+
+    <parameter name="CERT_CLAUSE" class="java.lang.String">
+	<defaultValueExpression><![CDATA["cert.jpg"]]></defaultValueExpression>
+    </parameter>
+
+    <!-- Background must be the very first band (or one of the first) -->
+    <background>
+        <band height="595">
+            <image>
+                <reportElement x="0" y="0" width="842" height="595"/>
+                <imageExpression><![CDATA["/opt/wildfly/background/" + $P{CERT_CLAUSE}]]></imageExpression>
+            </image>
+        </band>
+    </background>
+
+    <title>
+        <band height="595">
+            <textField isBlankWhenNull="true">
+                <reportElement x="0" y="100" width="842" height="80"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font fontName="DejaVu Sans" size="28"/>
+                </textElement>
+                <textFieldExpression><![CDATA["Award To"]]></textFieldExpression>
+            </textField>
+
+            <textField isBlankWhenNull="true">
+                <reportElement x="0" y="200" width="842" height="80"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font fontName="DejaVu Serif" size="48" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{NAME_CLAUSE}]]></textFieldExpression>
+            </textField>
+
+            <textField>
+                <reportElement x="0" y="300" width="842" height="60"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font fontName="DejaVu Sans" size="28"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{REASON_CLAUSE}]]></textFieldExpression>
+            </textField>
+
+            <textField pattern="MMMM dd, yyyy">
+                <reportElement x="500" y="450" width="250" height="40"/>
+                <textElement textAlignment="Center">
+                    <font fontName="DejaVu Sans" size="24" isItalic="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+            </textField>
+
+        </band>
+    </title>
+
+</jasperReport>

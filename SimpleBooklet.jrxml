@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports
+                                   http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="SimpleBooklet"
+              pageWidth="595"
+              pageHeight="842"
+              columnWidth="595"
+              leftMargin="0"
+              rightMargin="0"
+              topMargin="0"
+              bottomMargin="0">
+
+    <parameter name="BOOK" class="java.lang.String"/>
+    <parameter name="BOOK_CLAUSE" class="java.lang.String" isForPrompting="false">
+        <defaultValueExpression><![CDATA[($P{BOOK} == null || $P{BOOK}.trim().isEmpty()) ? "" : "AND b.book_name = '" + $P{BOOK} + "'"]]></defaultValueExpression>
+    </parameter>
+    <parameter name="BOOKLET_CLAUSE" class="java.lang.String">
+        <defaultValueExpression><![CDATA["booklet.jpg"]]></defaultValueExpression>
+    </parameter>
+    <queryString>
+        <![CDATA[
+	(
+            SELECT
+                a.author_name,
+                a.aboutauthor          AS about_author,
+                a.deviceid             AS author_device,
+                a.authorid             AS author_id,
+                a.author_image_version AS author_version,
+                b.book_name,
+                b.aboutbook            AS about_book,
+                p.page_title,
+                p.pagetext             AS page_text,
+                p.deviceid             AS device,
+                p.id,
+                p.pageid               AS page_id,
+                p.page_image_version   AS version,
+                0                      AS sort_order,
+                FALSE                  AS is_about_page
+            FROM public.author a
+            INNER JOIN public.book b  ON b.author = a.id
+            INNER JOIN public.page p  ON p.book   = b.id
+            WHERE TRUE $P!{BOOK_CLAUSE}
+        )
+
+        UNION ALL
+
+        (
+            SELECT
+                a.author_name,
+                a.aboutauthor          AS about_author,
+                a.deviceid             AS author_device,
+                a.authorid             AS author_id,
+                a.author_image_version AS author_version,
+                b.book_name,
+                b.aboutbook            AS about_book,
+                NULL                   AS page_title,
+                a.aboutauthor          AS page_text,
+                NULL::bigint           AS device,
+                NULL::bigint           AS id,
+                NULL::bigint           AS page_id,
+                a.author_image_version AS version,
+                1                      AS sort_order,
+                TRUE                   AS is_about_page
+            FROM public.author a
+            INNER JOIN public.book b ON b.author = a.id
+            WHERE TRUE $P!{BOOK_CLAUSE}
+            LIMIT 1
+        )
+
+        ORDER BY sort_order, book_name, id NULLS LAST;
+        ]]>
+    </queryString>
+
+    <field name="author_name" class="java.lang.String"/>
+    <field name="about_author" class="java.lang.String"/>
+    <field name="author_device" class="java.lang.Integer"/>
+    <field name="author_id" class="java.lang.Integer"/>
+    <field name="author_version" class="java.lang.Integer"/>
+    <field name="book_name" class="java.lang.String"/>
+    <field name="about_book" class="java.lang.String"/>
+    <field name="page_title" class="java.lang.String"/>
+    <field name="page_text" class="java.lang.String"/>
+    <field name="device" class="java.lang.Integer"/>
+    <field name="id" class="java.lang.Integer"/>
+    <field name="page_id" class="java.lang.Integer"/>
+    <field name="version" class="java.lang.Integer"/>
+    <field name="is_about_page" class="java.lang.Boolean"/>
+    <field name="sort_order"    class="java.lang.Integer"/>
+
+    <background>
+        <band height="842">
+            <image>
+                <reportElement x="0" y="0" width="595" height="842"/>
+                <imageExpression><![CDATA["/opt/wildfly/background/" + $P{BOOKLET_CLAUSE}]]></imageExpression>
+            </image>
+        </band>
+    </background>
+    <!-- Title page -->
+    <title>
+        <band height="722">
+            <textField>
+                <reportElement x="40" y="100" width="515" height="100"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="36" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{book_name}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="40" y="200" width="515" height="100"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="36" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA["By " + $F{author_name}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="40" y="400" width="515" height="100"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="36" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{about_book}]]></textFieldExpression>
+            </textField>
+        </band>
+    </title>
+    <pageHeader>
+        <band height="60"/>
+    </pageHeader>
+    <!-- One record = one full page -->
+    <detail>
+        <band height="722">
+	    <printWhenExpression><![CDATA[!$F{is_about_page}]]></printWhenExpression>
+            <textField>
+                <reportElement x="40" y="40" width="459" height="50"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="36" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{page_title}]]></textFieldExpression>
+            </textField>
+            <image scaleImage="RetainShape" hAlign="Center">
+                <reportElement x="68" y="90" width="459" height="343"/>
+                <imageExpression><![CDATA["/opt/wildfly/picture/Page/PageImage/"
+                    + $F{device} + "-" + $F{page_id} + "-" + $F{version} + ".jpg"]]></imageExpression>
+            </image>
+            <textField textAdjust="StretchHeight">
+                <reportElement x="68" y="450" width="459" height="272"/>
+                <textElement textAlignment="Center" verticalAlignment="Top" markup="none">
+                    <font size="20"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{page_text}]]></textFieldExpression>
+            </textField>
+        </band>
+    </detail>
+    <pageFooter>
+        <band height="60">
+            <textField>
+                <reportElement x="40" y="10" width="515" height="40"/>
+                <textElement textAlignment="Center">
+                    <font size="12" isItalic="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER}]]></textFieldExpression>
+            </textField>
+        </band>
+    </pageFooter>
+    <!--<lastPageFooter><band height="0"/></lastPageFooter>-->
+    <summary>
+    <band height="842">
+        <textField>
+            <reportElement x="40" y="40" width="459" height="50"/>
+            <textElement textAlignment="Center" verticalAlignment="Middle">
+                <font size="36" isBold="true"/>
+            </textElement>
+            <textFieldExpression><![CDATA["Author"]]></textFieldExpression>
+        </textField>
+        <image scaleImage="RetainShape" hAlign="Center">
+            <reportElement x="68" y="90" width="459" height="343"/>
+            <imageExpression><![CDATA["/opt/wildfly/picture/Author/AuthorImage/" 
+                + $F{author_device} + "-" + $F{author_id} + "-" + $F{author_version} + ".jpg"]]></imageExpression>
+        </image>
+
+        <!-- Author name as title -->
+        <textField>
+            <reportElement x="68" y="450" width="459" height="60"/>
+            <textElement textAlignment="Center" verticalAlignment="Middle">
+                <font size="28" isBold="true"/>
+            </textElement>
+            <textFieldExpression><![CDATA["About " + $F{author_name}]]></textFieldExpression>
+        </textField>
+
+        <!-- The bio text -->
+        <textField isStretchWithOverflow="true" textAdjust="StretchHeight">
+            <reportElement stretchType="RelativeToTallestObject" 
+                           x="68" y="520" width="459" height="200"/>
+            <textElement textAlignment="Justified" markup="none">
+                <font size="18"/>
+            </textElement>
+            <textFieldExpression><![CDATA[$F{about_author}]]></textFieldExpression>
+        </textField>
+    </band>
+    </summary>
+</jasperReport>
