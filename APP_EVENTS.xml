@@ -1,13 +1,6 @@
 <appEvents>
 
   <appEvent eventName='RonBDayEvent' eventDescription='Ron Birth Day Event' objName='ronBDayEvent'>
-    <eventParameter parameterRequired='true' parameterName='fun' parameterDescription='hope you have fun'/>
-    <eventParameter parameterRequired='true' parameterName='day' parameterDescription='special day'/>
-  </appEvent>
-
-  <appEvent eventName='ConradBDayEvent' eventDescription='Conrad Birth Day Event' objName='conradBDayEvent'>
-    <eventParameter parameterRequired='true' parameterName='funfun' parameterDescription='hope you have fun fun'/>
-    <eventParameter parameterRequired='true' parameterName='dayday' parameterDescription='special day day'/>
   </appEvent>
 
   <appEvent eventName='GetEmailEvent' eventDescription='Get Email for gator@sw-builder.com' objName='getEmailEvent'>

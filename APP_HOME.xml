@@ -1,3 +1,3 @@
 <appHome>
-  <home appName="socialBook" appDesc="Social Book Home" appPng="social_book_logo.png" appHomeURL="&lt;%= httpRoot %&gt;/socialBook/do?op=Home"/>
+  <home appName="booklet" appDesc="Booklet Home" appPng="booklet_logo.png" appHomeURL="&lt;%= httpRoot %&gt;/booklet/do?op=Home"/>
 </appHome>
