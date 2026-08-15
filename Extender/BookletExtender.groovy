@@ -22,7 +22,7 @@ MyData newData = new MyData()
 
 
 
-def dir = "../Booklet"
+def dir = "../booklet"
 
 def extFiles ( theDir, changes ) {
 
@@ -59,6 +59,6 @@ def extFiles ( theDir, changes ) {
 extFiles ( dir, changes )
 
 def src = new File("../booklet_logo.png").newDataInputStream()
-def dst = new File("../Booklet/booklet-war/src/main/webapp/resources/gfx/logo.png").newDataOutputStream()
+def dst = new File("../booklet/booklet-war/src/main/webapp/resources/gfx/logo.png").newDataOutputStream()
 dst << src
 
