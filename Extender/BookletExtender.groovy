@@ -1,64 +1,52 @@
+/**
+ * This code extends the basic build to include new files and new code.
+ */
+
+class MyData {
+    String theFile
+    String extMarker
+    String srcInsert
+}
+
 def changes = []
 
-public class MyData {
+// ******** New code changes ********
 
-  def theFile = ""
+// none
 
-  def extMarker =
-"""
-"""
-  def srcInsert =
-"""
-"""
+// ******** Process code changes ********
+def normalize(String text) {
+    text.replaceAll(/\r\n|\r/, "\n")
 }
-MyData newData = new MyData()
 
+def processFiles(File dir, List<MyData> changes) {
+    dir.eachFileRecurse { file ->
+        if (!file.isFile()) return
 
+        changes.each { data ->
+            if (file.name == data.theFile) {
+                def oldText = normalize(file.text)
+                def marker  = normalize(data.extMarker)
+                def insert  = normalize(data.srcInsert)
+                def newText = oldText.replace(marker, insert)
 
+                file.write(newText)
 
-
-// ******** Done ********
-
-
-
-
-def dir = "../booklet"
-
-def extFiles ( theDir, changes ) {
-
-   def fileList = new File(theDir).list().toList()
-
-   for ( i in fileList ) {
-
-      def inFile = theDir + "/" + i
-      def f1= new File(inFile)
-
-      MyData myData = new MyData();
-
-      if ( f1.isDirectory() ) {
-         extFiles ( inFile, changes )
-      } else {
-//println(i)
-        for (c in changes) {
-          MyData theData = c
-          if ( i.equals(theData.theFile) ) {
-            def oldFile = new File(inFile).text
-            def newMarker = theData.extMarker.replaceAll( "\\\n", "\\\r\\\n" )
-            def newSrc = theData.srcInsert.replaceAll( "\\\n", "\\\r\\\n" )
-            def newFile = oldFile.replace(newMarker, newSrc)
-            new File(inFile).write(newFile)
-            if (newFile.contains(newSrc) == false) { println(theData.theFile + " missing changes") }
-          }
-
+                if (!newText.contains(insert)) {
+                    println "${data.theFile} missing changes"
+                }
+            }
         }
-
-      } 
-   }
+    }
 }
 
-extFiles ( dir, changes )
+processFiles(new File("../booklet"), changes)
 
-def src = new File("../booklet_logo.png").newDataInputStream()
-def dst = new File("../booklet/booklet-war/src/main/webapp/resources/gfx/logo.png").newDataOutputStream()
-dst << src
+// ******** Include new files ********
 
+// Copy logo
+new File("../booklet_logo.png").withInputStream { src ->
+    new File("../booklet/booklet-war/src/main/webapp/resources/gfx/logo.png").withOutputStream { dst ->
+        dst << src
+    }
+}
