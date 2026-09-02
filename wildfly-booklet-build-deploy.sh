@@ -15,6 +15,7 @@ cd "$APP"
 git pull
 
 if [[ -f update_and_commit.sh ]]; then
+  chmod +x update_and_commit.sh
   sed -i 's/\r$//' update_and_commit.sh
   ./update_and_commit.sh
 fi
