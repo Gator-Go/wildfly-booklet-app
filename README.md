@@ -6,6 +6,9 @@ Catalog: https://sw-builder.com/appstore/wildfly/apps/wildfly-booklet-app.html
 
 Builder: https://github.com/Gator-Go/wildfly-builder
 
+Live demo: https://sw-builder.com/booklet/do?op=Home  
+Sign in with `guest` / `guest`.
+
 ## Build (Unix)
 
 Prerequisites: Git, Groovy, JDK, Maven, WildFly.
