@@ -13,7 +13,7 @@
     </parameter>
 
     <parameter name="REASON_CLAUSE" class="java.lang.String">
-	<defaultValueExpression><![CDATA["for not picking your nose for 5 whole days!!"]]></defaultValueExpression>
+	<defaultValueExpression><![CDATA["for building sw-builder.com!!"]]></defaultValueExpression>
     </parameter>
 
     <parameter name="CERT_CLAUSE" class="java.lang.String">
