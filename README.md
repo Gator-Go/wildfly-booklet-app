@@ -22,9 +22,9 @@ Expected sibling directories:
 cd ~/wildfly/wildfly-booklet-app
 git pull
 ./wildfly-booklet-build-deploy.sh
-
+```
 ## Layout
-
+```text
 wildfly-booklet-app/
 ├── wildfly-booklet-build-deploy.sh
 ├── Extender/
@@ -41,13 +41,27 @@ wildfly-booklet-app/
 ├── cert.jpg
 ├── SimpleBooklet.jrxml
 └── certTest.jrxml
-
-## Sample images
+```
+## Sample images:
 Copy the background JPGs onto the WildFly host:
 booklet.jpg  ->  /opt/wildfly/background/booklet.jpg
 cert.jpg     ->  /opt/wildfly/background/cert.jpg
 
-## Reports
+## Reports:
 SimpleBooklet.jrxml and certTest.jrxml are Jasper report templates.
 Load them in the running app with an admin account.
+
+## Note:
+The template/ and build/ dirs appear after a build. They come from
+wildfly-builder.
+
+WildflyBuilder.groovy is copied in from droid-builder at build time.
+
+BookletExtender.groovy performs functions unique to the booklet app such as deploying 
+the booklet logo image.
+
+The booklet/ dir appear after a build and is the build output and where
+the new app is created.
+
+
 
