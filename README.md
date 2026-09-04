@@ -60,7 +60,7 @@ WildflyBuilder.groovy is copied in from droid-builder at build time.
 BookletExtender.groovy performs functions unique to the booklet app such as deploying 
 the booklet logo image.
 
-The booklet/ dir appear after a build and is the build output and where
+The booklet/ dir appears after a build and is the build output where
 the new app is created.
 
 
